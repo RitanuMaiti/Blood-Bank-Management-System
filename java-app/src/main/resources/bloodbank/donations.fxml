@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane xmlns="http://javafx.com/javafx/21"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="bloodbank.controller.DonationController">
+
+    <top>
+        <HBox spacing="20"
+              style="-fx-background-color: #172033; -fx-padding: 18;">
+
+            <Label text="BLOOD BANK | DONATION RECORDS"
+                   style="-fx-text-fill: white; -fx-font-size: 22px; -fx-font-weight: bold;"
+                   HBox.hgrow="ALWAYS"/>
+
+            <Button text="Dashboard"
+                    onAction="#goToDashboard"
+                    style="-fx-background-color: #2f3b52; -fx-text-fill: white; -fx-font-weight: bold;"/>
+        </HBox>
+    </top>
+
+
+    <center>
+        <VBox spacing="15">
+
+            <padding>
+                <Insets top="20" right="25" bottom="20" left="25"/>
+            </padding>
+
+
+            <Label text="Donation Records"
+                   style="-fx-font-size: 26px; -fx-font-weight: bold;"/>
+
+
+            <GridPane hgap="15"
+                      vgap="12"
+                      style="-fx-background-color: #f4f6f8; -fx-padding: 18;">
+
+                <Label text="Donor ID:"
+                       GridPane.rowIndex="0"
+                       GridPane.columnIndex="0"/>
+
+                <TextField fx:id="donorIdField"
+                           promptText="Enter donor ID"
+                           GridPane.rowIndex="0"
+                           GridPane.columnIndex="1"/>
+
+
+                <Label text="Donation Date:"
+                       GridPane.rowIndex="0"
+                       GridPane.columnIndex="2"/>
+
+                <DatePicker fx:id="donationDatePicker"
+                            GridPane.rowIndex="0"
+                            GridPane.columnIndex="3"/>
+
+
+                <Label text="Hemoglobin:"
+                       GridPane.rowIndex="1"
+                       GridPane.columnIndex="0"/>
+
+                <TextField fx:id="hemoglobinField"
+                           promptText="Minimum 12.5"
+                           GridPane.rowIndex="1"
+                           GridPane.columnIndex="1"/>
+
+
+                <Label text="Blood Pressure:"
+                       GridPane.rowIndex="1"
+                       GridPane.columnIndex="2"/>
+
+                <TextField fx:id="bloodPressureField"
+                           promptText="e.g. 120/80"
+                           GridPane.rowIndex="1"
+                           GridPane.columnIndex="3"/>
+
+
+                <Label text="Pulse Rate:"
+                       GridPane.rowIndex="2"
+                       GridPane.columnIndex="0"/>
+
+                <TextField fx:id="pulseRateField"
+                           promptText="e.g. 72"
+                           GridPane.rowIndex="2"
+                           GridPane.columnIndex="1"/>
+
+
+                <Label text="Screening Result:"
+                       GridPane.rowIndex="2"
+                       GridPane.columnIndex="2"/>
+
+                <ComboBox fx:id="screeningResultBox"
+                          promptText="Select result"
+                          GridPane.rowIndex="2"
+                          GridPane.columnIndex="3"/>
+
+            </GridPane>
+
+
+            <HBox spacing="10">
+
+                <Button text="Add Donation"
+                        onAction="#addDonation"
+                        style="-fx-background-color: #198754; -fx-text-fill: white; -fx-font-weight: bold;"/>
+
+                <Button text="Update Donation"
+                        onAction="#updateDonation"
+                        style="-fx-background-color: #0d6efd; -fx-text-fill: white; -fx-font-weight: bold;"/>
+
+                <Button text="Delete Donation"
+                        onAction="#deleteDonation"
+                        style="-fx-background-color: #dc3545; -fx-text-fill: white; -fx-font-weight: bold;"/>
+
+                <Button text="Clear"
+                        onAction="#clearForm"
+                        style="-fx-background-color: #6c757d; -fx-text-fill: white; -fx-font-weight: bold;"/>
+
+            </HBox>
+
+
+            <HBox spacing="10">
+
+                <TextField fx:id="searchField"
+                           promptText="Search by donation ID, donor ID, blood pressure or screening result..."
+                           HBox.hgrow="ALWAYS"/>
+
+                <Button text="Search"
+                        onAction="#searchDonations"/>
+
+                <Button text="Show All"
+                        onAction="#loadDonations"/>
+
+            </HBox>
+
+
+            <TableView fx:id="donationTable"
+                       VBox.vgrow="ALWAYS">
+
+                <columns>
+
+                    <TableColumn fx:id="idColumn"
+                                 text="Donation ID"
+                                 prefWidth="90"/>
+
+                    <TableColumn fx:id="donorIdColumn"
+                                 text="Donor ID"
+                                 prefWidth="80"/>
+
+                    <TableColumn fx:id="donationDateColumn"
+                                 text="Donation Date"
+                                 prefWidth="120"/>
+
+                    <TableColumn fx:id="hemoglobinColumn"
+                                 text="Hemoglobin"
+                                 prefWidth="100"/>
+
+                    <TableColumn fx:id="bloodPressureColumn"
+                                 text="Blood Pressure"
+                                 prefWidth="120"/>
+
+                    <TableColumn fx:id="pulseRateColumn"
+                                 text="Pulse Rate"
+                                 prefWidth="90"/>
+
+                    <TableColumn fx:id="screeningColumn"
+                                 text="Screening Result"
+                                 prefWidth="130"/>
+
+                </columns>
+
+            </TableView>
+
+        </VBox>
+    </center>
+
+</BorderPane>
