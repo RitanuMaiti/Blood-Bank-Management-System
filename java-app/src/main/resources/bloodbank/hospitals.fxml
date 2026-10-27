@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx/21"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="bloodbank.controller.HospitalController">
+
+    <top>
+        <VBox spacing="10" style="-fx-background-color: #17324D; -fx-padding: 18;">
+            <HBox spacing="15" alignment="CENTER_LEFT">
+                <Button text="← Dashboard" onAction="#goToDashboard"/>
+                <Label text="Hospital Management"
+                       style="-fx-font-size: 23px; -fx-font-weight: bold; -fx-text-fill: white;"/>
+            </HBox>
+            <Label text="Register hospitals and manage their contact information."
+                   style="-fx-text-fill: white;"/>
+        </VBox>
+    </top>
+
+    <center>
+        <VBox spacing="14">
+            <padding>
+                <Insets top="18" right="18" bottom="18" left="18"/>
+            </padding>
+
+            <TitledPane text="Hospital Details" expanded="true" collapsible="false">
+                <content>
+                    <GridPane hgap="12" vgap="10">
+                        <padding>
+                            <Insets top="12" right="12" bottom="12" left="12"/>
+                        </padding>
+
+                        <Label text="Hospital Name:" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+                        <TextField fx:id="hospitalNameField" promptText="Hospital name"
+                                   GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+
+                        <Label text="License Number:" GridPane.rowIndex="0" GridPane.columnIndex="2"/>
+                        <TextField fx:id="licenseNumberField" promptText="License number"
+                                   GridPane.rowIndex="0" GridPane.columnIndex="3"/>
+
+                        <Label text="Address:" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+                        <TextField fx:id="addressField" promptText="Full address"
+                                   GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+
+                        <Label text="City:" GridPane.rowIndex="1" GridPane.columnIndex="2"/>
+                        <TextField fx:id="cityField" promptText="City"
+                                   GridPane.rowIndex="1" GridPane.columnIndex="3"/>
+
+                        <Label text="Contact Person:" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+                        <TextField fx:id="contactPersonField" promptText="Contact person"
+                                   GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+
+                        <Label text="Phone:" GridPane.rowIndex="2" GridPane.columnIndex="2"/>
+                        <TextField fx:id="phoneNumberField" promptText="Phone number"
+                                   GridPane.rowIndex="2" GridPane.columnIndex="3"/>
+
+                        <Label text="Email:" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
+                        <TextField fx:id="emailField" promptText="Email (optional)"
+                                   GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+
+                        <HBox spacing="8" GridPane.rowIndex="4" GridPane.columnIndex="0"
+                              GridPane.columnSpan="4">
+                            <Button text="Add Hospital" onAction="#addHospital"/>
+                            <Button text="Update Selected" onAction="#updateHospital"/>
+                            <Button text="Delete Selected" onAction="#deleteHospital"/>
+                            <Button text="Clear Form" onAction="#clearForm"/>
+                        </HBox>
+                    </GridPane>
+                </content>
+            </TitledPane>
+
+            <HBox spacing="8" alignment="CENTER_LEFT">
+                <TextField fx:id="searchField" promptText="Search name, license, city, phone..."
+                           HBox.hgrow="ALWAYS" onAction="#searchHospitals"/>
+                <Button text="Search" onAction="#searchHospitals"/>
+                <Button text="Load All" onAction="#loadHospitals"/>
+            </HBox>
+
+            <TableView fx:id="hospitalTable" VBox.vgrow="ALWAYS">
+                <columns>
+                    <TableColumn fx:id="idColumn" text="ID" prefWidth="55"/>
+                    <TableColumn fx:id="nameColumn" text="Hospital Name" prefWidth="150"/>
+                    <TableColumn fx:id="licenseColumn" text="License Number" prefWidth="120"/>
+                    <TableColumn fx:id="addressColumn" text="Address" prefWidth="170"/>
+                    <TableColumn fx:id="cityColumn" text="City" prefWidth="90"/>
+                    <TableColumn fx:id="contactColumn" text="Contact Person" prefWidth="125"/>
+                    <TableColumn fx:id="phoneColumn" text="Phone" prefWidth="110"/>
+                    <TableColumn fx:id="emailColumn" text="Email" prefWidth="150"/>
+                </columns>
+                <columnResizePolicy>
+                    <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
+                </columnResizePolicy>
+            </TableView>
+        </VBox>
+    </center>
+</BorderPane>

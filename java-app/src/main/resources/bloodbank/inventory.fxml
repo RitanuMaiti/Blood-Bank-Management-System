@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane xmlns="http://javafx.com/javafx/21"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="bloodbank.controller.InventoryController">
+
+    <!-- HEADER -->
+    <top>
+        <HBox spacing="20"
+              style="-fx-background-color: #172033; -fx-padding: 18;">
+
+            <Label text="BLOOD BANK | INVENTORY MANAGEMENT"
+                   style="-fx-text-fill: white; -fx-font-size: 22px; -fx-font-weight: bold;"
+                   HBox.hgrow="ALWAYS"/>
+
+            <Button text="Dashboard"
+                    onAction="#goToDashboard"
+                    style="-fx-background-color: #2f3b52; -fx-text-fill: white; -fx-font-weight: bold;"/>
+        </HBox>
+    </top>
+
+
+    <!-- MAIN CONTENT -->
+    <center>
+        <VBox spacing="15">
+
+            <padding>
+                <Insets top="20" right="25" bottom="20" left="25"/>
+            </padding>
+
+
+            <!-- TITLE -->
+            <Label text="Blood Inventory"
+                   style="-fx-font-size: 26px; -fx-font-weight: bold;"/>
+
+
+            <!-- FORM -->
+            <GridPane hgap="15"
+                      vgap="12"
+                      style="-fx-background-color: #f4f6f8; -fx-padding: 18;">
+
+                <!-- Donation ID -->
+                <Label text="Donation ID:"
+                       GridPane.rowIndex="0"
+                       GridPane.columnIndex="0"/>
+
+                <TextField fx:id="donationIdField"
+                           promptText="Enter donation ID"
+                           GridPane.rowIndex="0"
+                           GridPane.columnIndex="1"/>
+
+
+                <!-- Blood Type -->
+                <Label text="Blood Type:"
+                       GridPane.rowIndex="0"
+                       GridPane.columnIndex="2"/>
+
+                <ComboBox fx:id="bloodTypeBox"
+                          promptText="Select blood type"
+                          GridPane.rowIndex="0"
+                          GridPane.columnIndex="3"/>
+
+
+                <!-- Component -->
+                <Label text="Component:"
+                       GridPane.rowIndex="1"
+                       GridPane.columnIndex="0"/>
+
+                <ComboBox fx:id="componentTypeBox"
+                          promptText="Select component"
+                          GridPane.rowIndex="1"
+                          GridPane.columnIndex="1"/>
+
+
+                <!-- Volume -->
+                <Label text="Volume (mL):"
+                       GridPane.rowIndex="1"
+                       GridPane.columnIndex="2"/>
+
+                <TextField fx:id="volumeField"
+                           promptText="e.g. 450"
+                           GridPane.rowIndex="1"
+                           GridPane.columnIndex="3"/>
+
+
+                <!-- Collection Date -->
+                <Label text="Collection Date:"
+                       GridPane.rowIndex="2"
+                       GridPane.columnIndex="0"/>
+
+                <DatePicker fx:id="collectionDatePicker"
+                            GridPane.rowIndex="2"
+                            GridPane.columnIndex="1"/>
+
+
+                <!-- Expiry Date -->
+                <Label text="Expiry Date:"
+                       GridPane.rowIndex="2"
+                       GridPane.columnIndex="2"/>
+
+                <DatePicker fx:id="expiryDatePicker"
+                            GridPane.rowIndex="2"
+                            GridPane.columnIndex="3"/>
+
+
+                <!-- Status -->
+                <Label text="Status:"
+                       GridPane.rowIndex="3"
+                       GridPane.columnIndex="0"/>
+
+                <ComboBox fx:id="statusBox"
+                          promptText="Select status"
+                          GridPane.rowIndex="3"
+                          GridPane.columnIndex="1"/>
+
+            </GridPane>
+
+
+            <!-- BUTTONS -->
+            <HBox spacing="10">
+
+                <Button text="Add Unit"
+                        onAction="#addUnit"
+                        style="-fx-background-color: #198754; -fx-text-fill: white; -fx-font-weight: bold;"/>
+
+                <Button text="Update Unit"
+                        onAction="#updateUnit"
+                        style="-fx-background-color: #0d6efd; -fx-text-fill: white; -fx-font-weight: bold;"/>
+
+                <Button text="Delete Unit"
+                        onAction="#deleteUnit"
+                        style="-fx-background-color: #dc3545; -fx-text-fill: white; -fx-font-weight: bold;"/>
+
+                <Button text="Clear"
+                        onAction="#clearForm"
+                        style="-fx-background-color: #6c757d; -fx-text-fill: white; -fx-font-weight: bold;"/>
+
+            </HBox>
+
+
+            <!-- SEARCH -->
+            <HBox spacing="10">
+
+                <TextField fx:id="searchField"
+                           promptText="Search by unit ID, donation ID, blood type, component or status..."
+                           HBox.hgrow="ALWAYS"/>
+
+                <Button text="Search"
+                        onAction="#searchUnits"/>
+
+                <Button text="Show All"
+                        onAction="#loadUnits"/>
+
+            </HBox>
+
+
+            <!-- TABLE -->
+            <TableView fx:id="inventoryTable"
+                       VBox.vgrow="ALWAYS">
+
+                <columns>
+
+                    <TableColumn fx:id="unitIdColumn"
+                                 text="Unit ID"
+                                 prefWidth="75"/>
+
+                    <TableColumn fx:id="donationIdColumn"
+                                 text="Donation ID"
+                                 prefWidth="90"/>
+
+                    <TableColumn fx:id="bloodTypeColumn"
+                                 text="Blood Type"
+                                 prefWidth="90"/>
+
+                    <TableColumn fx:id="componentColumn"
+                                 text="Component"
+                                 prefWidth="180"/>
+
+                    <TableColumn fx:id="volumeColumn"
+                                 text="Volume (mL)"
+                                 prefWidth="100"/>
+
+                    <TableColumn fx:id="collectionDateColumn"
+                                 text="Collection Date"
+                                 prefWidth="120"/>
+
+                    <TableColumn fx:id="expiryDateColumn"
+                                 text="Expiry Date"
+                                 prefWidth="120"/>
+
+                    <TableColumn fx:id="statusColumn"
+                                 text="Status"
+                                 prefWidth="120"/>
+
+                </columns>
+
+            </TableView>
+
+        </VBox>
+    </center>
+
+</BorderPane>

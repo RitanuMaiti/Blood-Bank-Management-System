@@ -1,0 +1,280 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane xmlns="http://javafx.com/javafx/21"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="bloodbank.controller.DashboardController"
+            style="-fx-background-color: #f5f7fa;">
+
+    <!-- ==================== SIDEBAR ==================== -->
+
+    <left>
+        <VBox prefWidth="230"
+              spacing="10"
+              style="-fx-background-color: #17212b;">
+
+            <padding>
+                <Insets top="25" right="15" bottom="20" left="15"/>
+            </padding>
+
+            <!-- Logo -->
+            <Label text="🩸 BLOOD BANK"
+                   style="-fx-text-fill: white;
+                          -fx-font-size: 20px;
+                          -fx-font-weight: bold;">
+
+                <padding>
+                    <Insets top="0" right="0" bottom="20" left="5"/>
+                </padding>
+
+            </Label>
+
+            <!-- Subtitle -->
+            <Label text="MANAGEMENT SYSTEM"
+                   style="-fx-text-fill: #aeb8c2;
+                          -fx-font-size: 11px;">
+
+                <padding>
+                    <Insets top="0" right="0" bottom="15" left="5"/>
+                </padding>
+
+            </Label>
+
+            <!-- Navigation -->
+
+            <Button text="Dashboard"
+                    onAction="#showDashboard"
+                    maxWidth="Infinity"
+                    styleClass="nav-button"/>
+
+            <Button text="Donor Management"
+                    onAction="#showDonors"
+                    maxWidth="Infinity"
+                    styleClass="nav-button"/>
+
+            <Button text="Blood Inventory"
+                    onAction="#showInventory"
+                    maxWidth="Infinity"
+                    styleClass="nav-button"/>
+
+            <Button text="Hospitals"
+                    onAction="#showHospitals"
+                    maxWidth="Infinity"
+                    styleClass="nav-button"/>
+
+            <Button text="Blood Requests"
+                    onAction="#showRequests"
+                    maxWidth="Infinity"
+                    styleClass="nav-button"/>
+
+            <Button text="Emergency Matching"
+                    onAction="#showEmergencyMatching"
+                    maxWidth="Infinity"
+                    styleClass="nav-button"/>
+
+        </VBox>
+    </left>
+
+
+    <!-- ==================== MAIN CONTENT ==================== -->
+
+    <center>
+
+        <VBox spacing="25">
+
+            <padding>
+                <Insets top="30" right="35" bottom="30" left="35"/>
+            </padding>
+
+
+            <!-- ==================== HEADER ==================== -->
+
+            <HBox alignment="CENTER_LEFT">
+
+                <VBox spacing="5">
+
+                    <Label text="Dashboard"
+                           style="-fx-font-size: 28px;
+                                  -fx-font-weight: bold;
+                                  -fx-text-fill: #17212b;"/>
+
+                    <Label text="Blood bank overview and emergency status"
+                           style="-fx-font-size: 14px;
+                                  -fx-text-fill: #6b7280;"/>
+
+                </VBox>
+
+            </HBox>
+
+
+            <!-- ==================== STAT CARDS ==================== -->
+
+            <GridPane hgap="20"
+                      vgap="20">
+
+
+                <!-- Total Donors -->
+
+                <VBox GridPane.columnIndex="0"
+                      prefWidth="250"
+                      prefHeight="130"
+                      spacing="10"
+                      style="-fx-background-color: white;
+                             -fx-background-radius: 10;
+                             -fx-border-color: #e5e7eb;
+                             -fx-border-radius: 10;">
+
+                    <padding>
+                        <Insets top="20"
+                                right="20"
+                                bottom="20"
+                                left="20"/>
+                    </padding>
+
+                    <Label text="TOTAL DONORS"
+                           style="-fx-text-fill: #6b7280;
+                                  -fx-font-size: 12px;
+                                  -fx-font-weight: bold;"/>
+
+                    <Label text="0"
+                           style="-fx-font-size: 30px;
+                                  -fx-font-weight: bold;
+                                  -fx-text-fill: #17212b;"/>
+
+                </VBox>
+
+
+                <!-- Available Blood Units -->
+
+                <VBox GridPane.columnIndex="1"
+                      prefWidth="250"
+                      prefHeight="130"
+                      spacing="10"
+                      style="-fx-background-color: white;
+                             -fx-background-radius: 10;
+                             -fx-border-color: #e5e7eb;
+                             -fx-border-radius: 10;">
+
+                    <padding>
+                        <Insets top="20"
+                                right="20"
+                                bottom="20"
+                                left="20"/>
+                    </padding>
+
+                    <Label text="AVAILABLE BLOOD UNITS"
+                           style="-fx-text-fill: #6b7280;
+                                  -fx-font-size: 12px;
+                                  -fx-font-weight: bold;"/>
+
+                    <Label text="0"
+                           style="-fx-font-size: 30px;
+                                  -fx-font-weight: bold;
+                                  -fx-text-fill: #17212b;"/>
+
+                </VBox>
+
+
+                <!-- Pending Requests -->
+
+                <VBox GridPane.columnIndex="2"
+                      prefWidth="250"
+                      prefHeight="130"
+                      spacing="10"
+                      style="-fx-background-color: white;
+                             -fx-background-radius: 10;
+                             -fx-border-color: #e5e7eb;
+                             -fx-border-radius: 10;">
+
+                    <padding>
+                        <Insets top="20"
+                                right="20"
+                                bottom="20"
+                                left="20"/>
+                    </padding>
+
+                    <Label text="PENDING REQUESTS"
+                           style="-fx-text-fill: #6b7280;
+                                  -fx-font-size: 12px;
+                                  -fx-font-weight: bold;"/>
+
+                    <Label text="0"
+                           style="-fx-font-size: 30px;
+                                  -fx-font-weight: bold;
+                                  -fx-text-fill: #17212b;"/>
+
+                </VBox>
+
+            </GridPane>
+
+
+            <!-- ==================== LOWER PANELS ==================== -->
+
+            <HBox spacing="20">
+
+
+                <!-- Blood Inventory -->
+
+                <VBox HBox.hgrow="ALWAYS"
+                      spacing="15"
+                      style="-fx-background-color: white;
+                             -fx-background-radius: 10;
+                             -fx-border-color: #e5e7eb;
+                             -fx-border-radius: 10;">
+
+                    <padding>
+                        <Insets top="20"
+                                right="20"
+                                bottom="20"
+                                left="20"/>
+                    </padding>
+
+                    <Label text="Blood Inventory Overview"
+                           style="-fx-font-size: 18px;
+                                  -fx-font-weight: bold;"/>
+
+                    <Label text="Inventory data will appear here once the database is connected."
+                           style="-fx-text-fill: #6b7280;"/>
+
+                </VBox>
+
+
+                <!-- Emergency Status -->
+
+                <VBox prefWidth="280"
+                      spacing="15"
+                      style="-fx-background-color: white;
+                             -fx-background-radius: 10;
+                             -fx-border-color: #e5e7eb;
+                             -fx-border-radius: 10;">
+
+                    <padding>
+                        <Insets top="20"
+                                right="20"
+                                bottom="20"
+                                left="20"/>
+                    </padding>
+
+                    <Label text="Emergency Status"
+                           style="-fx-font-size: 18px;
+                                  -fx-font-weight: bold;"/>
+
+                    <Label text="No active emergencies"
+                           style="-fx-text-fill: #6b7280;"/>
+
+                </VBox>
+
+            </HBox>
+
+        </VBox>
+
+    </center>
+
+</BorderPane>
