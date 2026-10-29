@@ -81,8 +81,8 @@ mvn -version
 ### 1. Clone the repository
 
 ```bash
-git clone https://github.com/RitanuMaiti/BloodBank-DBMS-Project.git
-cd BloodBank-DBMS-Project
+git clone https://github.com/RitanuMaiti/Blood-Bank-Management-System.git
+cd Blood-Bank-Management-System
 ```
 
 ### 2. Configure the database
