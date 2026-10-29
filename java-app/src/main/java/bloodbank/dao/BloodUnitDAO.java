@@ -51,6 +51,29 @@ public class BloodUnitDAO {
         return units;
     }
 
+    public java.util.Optional<BloodUnit> getUnitById(int unitId) throws SQLException {
+        String sql =
+                "SELECT Unit_ID, Donation_ID, Blood_Type, " +
+                "Component_Type, Volume_ML, Collection_Date, " +
+                "Expiry_Date, Status " +
+                "FROM BLOOD_INVENTORY " +
+                "WHERE Unit_ID = ?";
+
+        try (
+                Connection connection = DBConnection.getConnection();
+                PreparedStatement statement = connection.prepareStatement(sql)
+        ) {
+            statement.setInt(1, unitId);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                if (resultSet.next()) {
+                    return java.util.Optional.of(mapResultSetToBloodUnit(resultSet));
+                }
+            }
+        }
+        return java.util.Optional.empty();
+    }
+
+
 
     public void addUnit(BloodUnit unit)
             throws SQLException {

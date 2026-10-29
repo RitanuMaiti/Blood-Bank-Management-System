@@ -5,3 +5,15 @@ target/
 .vscode/
 *.log
 error-log.txt
+
+# Local database configuration and credentials
+**/db.properties
+**/.env
+**/.env.*
+
+# Build output
+**/target/
+
+# IDE and operating system files
+.DS_Store
+Thumbs.db

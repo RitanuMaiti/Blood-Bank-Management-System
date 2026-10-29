@@ -59,6 +59,11 @@
                     maxWidth="Infinity"
                     styleClass="nav-button"/>
 
+            <Button text="Donation Records"
+                    onAction="#showDonations"
+                    maxWidth="Infinity"
+                    styleClass="nav-button"/>
+
             <Button text="Blood Inventory"
                     onAction="#showInventory"
                     maxWidth="Infinity"
@@ -143,7 +148,8 @@
                                   -fx-font-size: 12px;
                                   -fx-font-weight: bold;"/>
 
-                    <Label text="0"
+                    <Label fx:id="totalDonorsLabel"
+                           text="0"
                            style="-fx-font-size: 30px;
                                   -fx-font-weight: bold;
                                   -fx-text-fill: #17212b;"/>
@@ -174,7 +180,8 @@
                                   -fx-font-size: 12px;
                                   -fx-font-weight: bold;"/>
 
-                    <Label text="0"
+                    <Label fx:id="availableUnitsLabel"
+                           text="0"
                            style="-fx-font-size: 30px;
                                   -fx-font-weight: bold;
                                   -fx-text-fill: #17212b;"/>
@@ -205,7 +212,8 @@
                                   -fx-font-size: 12px;
                                   -fx-font-weight: bold;"/>
 
-                    <Label text="0"
+                    <Label fx:id="pendingRequestsLabel"
+                           text="0"
                            style="-fx-font-size: 30px;
                                   -fx-font-weight: bold;
                                   -fx-text-fill: #17212b;"/>

@@ -14,6 +14,11 @@ public class DonorService {
         return dao.getAllDonors();
     }
 
+    public java.util.Optional<Donor> getDonorById(int id) throws SQLException {
+        if (id <= 0) return java.util.Optional.empty();
+        return dao.getDonorById(id);
+    }
+
     public List<Donor> searchDonors(String term) throws SQLException {
         return dao.searchDonors(term == null ? "" : term.trim());
     }

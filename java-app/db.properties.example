@@ -1,0 +1,11 @@
+﻿# Blood Bank Management System - Database Configuration Template
+# Copy this file to db.properties and update credentials for your environment.
+# Never commit db.properties containing real credentials.
+
+# Oracle JDBC connection
+db.url=jdbc:oracle:thin:@//127.0.0.1:1521/FREEPDB1
+db.username=BLOODBANK
+db.password=CHANGE_ME
+
+# Optional connection timeout in seconds
+db.timeout.seconds=5

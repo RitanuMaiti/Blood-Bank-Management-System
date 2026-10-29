@@ -43,6 +43,28 @@ public class DonationDAO {
         return donations;
     }
 
+    public java.util.Optional<Donation> getDonationById(int donationId) throws SQLException {
+        String sql =
+                "SELECT Donation_ID, Donor_ID, Donation_Date, " +
+                "Hemoglobin_Level, Blood_Pressure, Pulse_Rate, " +
+                "Medical_Screening_Result " +
+                "FROM DONATION_RECORD " +
+                "WHERE Donation_ID = ?";
+
+        try (
+                Connection connection = DBConnection.getConnection();
+                PreparedStatement statement = connection.prepareStatement(sql)
+        ) {
+            statement.setInt(1, donationId);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                if (resultSet.next()) {
+                    return java.util.Optional.of(mapResultSetToDonation(resultSet));
+                }
+            }
+        }
+        return java.util.Optional.empty();
+    }
+
     public void addDonation(Donation donation)
             throws SQLException {
 
@@ -56,7 +78,7 @@ public class DonationDAO {
         try (
                 Connection connection = DBConnection.getConnection();
                 PreparedStatement statement =
-                        connection.prepareStatement(sql)
+                        connection.prepareStatement(sql, java.sql.Statement.RETURN_GENERATED_KEYS)
         ) {
 
             statement.setInt(
@@ -90,6 +112,12 @@ public class DonationDAO {
             );
 
             statement.executeUpdate();
+
+            try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    donation.setDonationId(generatedKeys.getInt(1));
+                }
+            }
         }
     }
 

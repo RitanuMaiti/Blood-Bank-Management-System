@@ -50,6 +50,29 @@ public class HospitalDAO {
         return hospitals;
     }
 
+    public java.util.Optional<Hospital> getHospitalById(int hospitalId) throws SQLException {
+        String sql =
+                "SELECT Hospital_ID, Hospital_Name, " +
+                "License_Number, Address, City, " +
+                "Contact_Person, Phone_Number, Email " +
+                "FROM HOSPITAL " +
+                "WHERE Hospital_ID = ?";
+
+        try (
+                Connection connection = DBConnection.getConnection();
+                PreparedStatement statement = connection.prepareStatement(sql)
+        ) {
+            statement.setInt(1, hospitalId);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                if (resultSet.next()) {
+                    return java.util.Optional.of(mapResultSetToHospital(resultSet));
+                }
+            }
+        }
+        return java.util.Optional.empty();
+    }
+
+
 
     public void addHospital(Hospital hospital)
             throws SQLException {

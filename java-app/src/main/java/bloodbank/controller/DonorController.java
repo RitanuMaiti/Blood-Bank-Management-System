@@ -56,7 +56,7 @@ public class DonorController {
         ));
 
         eligibilityStatusBox.setItems(FXCollections.observableArrayList(
-                "Eligible", "Temporary_Deferral", "Permanent_Deferral"
+                "Eligible", "Cooldown", "Temporary_Deferral", "Permanent_Deferral"
         ));
 
         idColumn.setCellValueFactory(

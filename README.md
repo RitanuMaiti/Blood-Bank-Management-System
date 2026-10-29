@@ -1,149 +1,194 @@
 # Blood Bank Management System
 
-A database-driven desktop application designed to manage blood donors, donations, hospital records, blood inventory, and blood requests through a JavaFX interface and Oracle SQL database.
+A robust, database-driven desktop application engineered to manage blood donors, donations, hospital accounts, inventory stock, and emergency blood requests through a JavaFX interface and an Oracle Database backend.
 
-## Overview
+---
 
-The **Blood Bank Management System** aims to simplify essential blood bank operations by organizing donor information, tracking donations, maintaining blood inventory, and managing hospital blood requests.
+## Architecture Overview
 
-The project combines a JavaFX desktop application with database scripts and a layered Java architecture to support structured data management.
+The system follows a strict multi-tiered enterprise architecture:
 
-## Features
+```
+┌─────────────────────────────────────────────────────────────┐
+│                 JavaFX User Interface Layer                 │
+│   (Dashboard, Donors, Donations, Inventory, Hospitals,      │
+│               Emergency Requests & Allocation)              │
+└──────────────────────────────┬──────────────────────────────┘
+                               │ User Interactions & Events
+┌──────────────────────────────▼──────────────────────────────┐
+│                   Controller & UI Wiring                    │
+│   (DashboardController, DonorController, DonationController,│
+│    InventoryController, HospitalController, RequestController)│
+└──────────────────────────────┬──────────────────────────────┘
+                               │ Business Operations
+┌──────────────────────────────▼──────────────────────────────┐
+│                    Service & Business Logic                 │
+│   (MatchingService, DonorService, DonationService,           │
+│    InventoryService, HospitalService, RequestService)       │
+└──────────────────────────────┬──────────────────────────────┘
+                               │ Parameterized JDBC Calls
+┌──────────────────────────────▼──────────────────────────────┐
+│                   Data Access Object (DAO)                  │
+│   (BloodUnitDAO, DonationDAO, DonorDAO, HospitalDAO,        │
+│                         RequestDAO)                         │
+└──────────────────────────────┬──────────────────────────────┘
+                               │ Oracle JDBC / Connection Pool
+┌──────────────────────────────▼──────────────────────────────┐
+│                  Relational Database Layer                  │
+│    (Oracle Database 19c/21c/23ai / H2 In-Memory for Tests)  │
+│  - Tables: DONOR, HOSPITAL, DONATION_RECORD, BLOOD_INVENTORY│
+│            EMERGENCY_REQUEST, ALLOCATION_DISPATCH           │
+│  - Triggers: trg_check_cooldown (90-day cooldown enforcement│
+│  - Procedures: allocate_blood (concurrency-safe allocation) │
+│  - Functions: is_blood_compatible (component-aware rules)   │
+│  - Views: v_low_inventory_alert (stock monitoring)          │
+└─────────────────────────────────────────────────────────────┘
+```
 
-* **Donor Management** — Maintain and manage donor records.
-* **Donation Management** — Record blood donations and associated information.
-* **Hospital Management** — Organize hospital records.
-* **Blood Inventory Management** — Manage blood stock information.
-* **Blood Request Management** — Handle blood requests through the application.
-* **JavaFX Interface** — Desktop interface built using JavaFX and FXML.
-* **Database Integration** — SQL scripts for schema creation, sample data, and database logic.
-* **Layered Architecture** — Separation of controllers, data-access objects, models, and services.
+---
 
-## Tech Stack
+## Required Software & Versions
 
-| Technology      | Purpose                         |
-| --------------- | ------------------------------- |
-| Java 21         | Application development         |
-| JavaFX          | Desktop user interface          |
-| FXML            | UI layout                       |
-| Maven           | Build and dependency management |
-| Oracle Database | Relational data storage         |
-| SQL             | Database schema and operations  |
+| Component | Required Version | Notes |
+| :--- | :--- | :--- |
+| **Java Development Kit (JDK)** | Java 21 LTS | Verified with Eclipse Adoptium OpenJDK 21 |
+| **Build Tool** | Apache Maven 3.9+ / 3.10+ | Used for compilation and running tests |
+| **Database** | Oracle Database (XE, 19c, 21c, 23ai) | Production / target database |
+| **Test Database** | H2 Database (Oracle Mode) | Included in Maven test scope for isolated integration testing |
+| **JavaFX** | OpenJFX 21 | Bundled via Maven dependencies |
 
-## Project Structure
+---
+
+## Database Setup Instructions
+
+The database scripts are organized in `database/` in sequential execution order:
 
 ```text
-Blood-Bank-Management-System/
-├── database/
-│   ├── 01_schema.sql
-│   ├── 02_seed.sql
-│   └── 03_logic.sql
-│
-├── java-app/
-│   ├── pom.xml
-│   ├── README.md
-│   └── src/
-│       └── main/
-│           ├── java/bloodbank/
-│           │   ├── controller/
-│           │   ├── dao/
-│           │   ├── model/
-│           │   └── service/
-│           └── resources/bloodbank/
-│               ├── dashboard.fxml
-│               ├── donors.fxml
-│               ├── donations.fxml
-│               ├── hospitals.fxml
-│               ├── inventory.fxml
-│               └── requests.fxml
-│
-└── README.md
+database/
+├── 00_reset_dev_only.sql   # OPTIONAL / DEV ONLY: Destructive table drops with warnings
+├── 01_schema.sql           # Non-destructive table, constraint, and index creation
+├── 02_seed.sql             # Safe sample data respecting donor eligibility & expiry
+└── 03_logic.sql            # Compatibility function, cooldown trigger & allocation procedure
 ```
 
-## Prerequisites
+### Safety Policy
+- **Never execute destructive scripts against production.**
+- `01_schema.sql` contains only safe `CREATE TABLE` and `CREATE INDEX` statements.
+- `00_reset_dev_only.sql` is strictly for isolated local development resets when starting fresh.
 
-Before running the Java application, ensure you have:
+### Execution via SQL*Plus or Oracle SQL Developer:
 
-* JDK 21
-* Apache Maven
-* Oracle Database configured for the supplied SQL scripts
-* SQL*Plus or another compatible database client
-
-Verify your Java and Maven installations:
+Connect as your application schema user (e.g. `bloodbank`):
 
 ```bash
-java -version
-mvn -version
+# 1. (Optional - Development only) Reset tables if re-initializing:
+sqlplus bloodbank/bloodbank@localhost:1521/XE @database/00_reset_dev_only.sql
+
+# 2. Create the schema (tables, constraints, indexes):
+sqlplus bloodbank/bloodbank@localhost:1521/XE @database/01_schema.sql
+
+# 3. Load sample seed data:
+sqlplus bloodbank/bloodbank@localhost:1521/XE @database/02_seed.sql
+
+# 4. Deploy triggers, stored procedures, and views:
+sqlplus bloodbank/bloodbank@localhost:1521/XE @database/03_logic.sql
 ```
 
-## Setup and Execution
+---
 
-### 1. Clone the repository
+## Configuration Instructions
+
+Database credentials and connection URLs are externalized to prevent hardcoding secrets in source code.
+
+Configuration precedence:
+1. **JVM System Properties:** `-Ddb.url=... -Ddb.username=... -Ddb.password=...`
+2. **Environment Variables:** `DB_URL`, `DB_USERNAME` (or `DB_USER`), `DB_PASSWORD`
+3. **Properties File:** `java-app/db.properties` (or on classpath)
+4. **Local Fallback:** `jdbc:oracle:thin:@localhost:1521:XE` (`bloodbank`/`bloodbank`)
+
+### Using `db.properties`
+Copy the provided template:
+```bash
+cd java-app
+cp db.properties.example db.properties
+```
+Edit `db.properties`:
+```properties
+db.url=jdbc:oracle:thin:@localhost:1521:XE
+db.username=bloodbank
+db.password=your_secure_password
+```
+*(Note: `db.properties` is git-ignored and will not be committed.)*
+
+---
+
+## Building and Testing
+
+### 1. Run Automated Test Suite (45 Unit & Integration Tests)
+The test suite runs in an isolated in-memory Oracle-compatible database environment without requiring an active Oracle instance:
 
 ```bash
-git clone https://github.com/RitanuMaiti/Blood-Bank-Management-System.git
-cd Blood-Bank-Management-System
+cd java-app
+mvn test
 ```
 
-### 2. Configure the database
+Test coverage includes:
+- **`BloodCompatibilityTest` (16 tests):** Red-cell compatibility (O- universal red-cell donor, AB+ universal red-cell recipient), conservative exact-match whole-blood compatibility, plasma compatibility (AB universal donor, O universal recipient), platelet matching, alias normalization.
+- **`DonorEligibilityTest` (8 tests):** Minimum age (18), 90-day cooldown period, first-time donor eligibility, preceding date rejection, future date rejection, minimum hemoglobin (12.5 g/dL), permanent deferral checks.
+- **`RequestStatusLifecycleTest` (7 tests):** Valid transitions (`Pending` -> `Partially_Fulfilled` -> `Fulfilled`), terminal state protection (`Fulfilled` and `Cancelled` cannot be modified or reopened).
+- **`AllocationIntegrationTest` (8 tests):** Complete allocation, partial allocation, expired unit exclusion, incompatible group rejection, duplicate allocation prevention, cancelled request rejection, inventory locking.
+- **`DaoIntegrationTest` (4 tests):** Hospital, Donor, Donation, Inventory CRUD operations and Foreign-Key constraint enforcement.
+- **`FxmlResourceAndWiringTest` (2 tests):** Static verification that all FXML files exist and all `onAction` buttons correctly map to real methods on their respective controllers.
 
-Review the SQL scripts in the `database/` directory and execute them in the intended order against your Oracle database.
-
-**Important:** Inspect scripts before execution, particularly any statements that drop or recreate tables. Back up existing data before running destructive scripts.
-
-### 3. Configure database connectivity
-
-Open:
-
-`java-app/src/main/java/bloodbank/DBConnection.java`
-
-Configure the Oracle JDBC URL and database credentials for your local environment. Never commit real passwords or other secrets to the repository.
-
-### 4. Compile the application
-
+### 2. Compile Application
 ```bash
 cd java-app
 mvn clean compile
 ```
 
-### 5. Launch the application
-
+### 3. Launch JavaFX Application
 ```bash
+cd java-app
 mvn javafx:run
 ```
 
-Database-dependent functionality requires a valid database configuration and a compatible schema.
+---
 
-## Architecture
+## Clinical Transfusion Compatibility Baseline
 
-The Java application is organized into distinct layers:
+The system implements component-specific compatibility rules:
 
-* **Controllers:** Handle user interactions with the interface.
-* **DAO Layer:** Manages database access.
-* **Models:** Represent application entities.
-* **Service Layer:** Organizes application operations and business logic.
-* **FXML Resources:** Define the JavaFX screens.
+### 1. Red-Cell Components (Red Blood Cells, Packed Red Cells)
+Based on recipient antibodies against donor red cell surface antigens (A, B, RhD):
+- **O-:** Universal cellular donor. Can only receive O-.
+- **O+:** Can receive O-, O+.
+- **A-:** Can receive O-, A-.
+- **A+:** Can receive O-, O+, A-, A+.
+- **B-:** Can receive O-, B-.
+- **B+:** Can receive O-, O+, B-, B+.
+- **AB-:** Can receive O-, A-, B-, AB-.
+- **AB+:** Universal cellular recipient. Can receive all groups.
 
-This structure improves code organization and separates interface logic from database operations.
+### 2. Acellular / Plasma Components (Fresh Frozen Plasma, Plasma)
+Based on donor plasma antibodies against recipient red cells (anti-A, anti-B):
+- **AB (AB+, AB-):** Universal plasma donor (plasma has no anti-A or anti-B antibodies).
+- **A:** Can donate plasma to A and O recipients.
+- **B:** Can donate plasma to B and O recipients.
+- **O:** Can donate plasma only to O recipients (plasma contains both anti-A and anti-B).
 
-## Future Enhancements
+### 3. Whole Blood
+- Conservative policy: require an exact ABO/Rh match because whole blood contains both red cells and donor plasma. The system does not assume that O-negative whole blood is universally compatible; that requires a validated low-titer group O protocol.
 
-Potential areas for further development include:
+### 4. Platelets
+- Standard conservative policy: exact ABO/Rh match preferred.
 
-* Stronger blood-group compatibility and allocation validation.
-* Improved input validation and error handling.
-* Transaction management and data consistency checks.
-* Automated unit and integration testing.
-* Inventory analytics and reporting.
-* Secure external configuration for database credentials.
+> [!IMPORTANT]
+> This academic project establishes a standard baseline. Deployment into a live healthcare environment requires compliance with relevant national transfusion standards (e.g., AABB, WHO, or DGHS guidelines) and validation by a licensed medical director.
 
-## Contributors
+---
 
-Developed as a collaborative academic project.
+## Known Limitations & Production Recommendations
 
-* **Ritanu Maiti**
-* **Soham Roy**
-
-## License
-
-No license has been specified for this repository. Please contact the repository maintainers regarding usage and redistribution permissions.
+1. **Local Oracle Listener:** If Oracle Database is not installed or running locally on port 1521, the application UI opens in offline mode (displaying connection alerts when attempting live queries). Automated tests run independently of local Oracle via in-memory Oracle-mode H2.
+2. **Component Shelf-Life Variation:** The default cooldown rule is set to 90 days (standard for whole blood). Apheresis platelet and plasma donors in real-world facilities may be cleared on shorter intervals (e.g., 7–14 days), which can be adjusted via `DonationService.setCooldownDays(...)`.
+3. **Connection Pooling:** For high-volume multi-user deployments, upgrading from single JDBC `DriverManager` connections to a connection pool (e.g. HikariCP or Oracle UCP) is recommended.

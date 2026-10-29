@@ -13,6 +13,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 
 import java.sql.SQLException;
 import java.time.LocalDateTime;
+import java.util.List;
 
 public class RequestController {
 
@@ -36,6 +37,7 @@ public class RequestController {
     @FXML private TableColumn<BloodRequest, String> statusColumn;
 
     private final RequestService requestService = new RequestService();
+    private final bloodbank.service.MatchingService matchingService = new bloodbank.service.MatchingService();
 
     private final ObservableList<BloodRequest> requests =
             FXCollections.observableArrayList();
@@ -131,6 +133,82 @@ public class RequestController {
                     "Database Error",
                     "Could not create the request.\n" + e.getMessage()
             );
+        }
+    }
+
+    @FXML
+    public void allocateUnits() {
+        BloodRequest selected = requestTable.getSelectionModel().getSelectedItem();
+        if (selected == null) {
+            showMessage(Alert.AlertType.WARNING, "No Selection", "Please select a request from the table to allocate blood.");
+            return;
+        }
+
+        try {
+            bloodbank.service.MatchingService.AllocationResult result =
+                    matchingService.allocate(selected.getRequestId());
+
+            if (result.getUnitsAllocated() > 0) {
+                showMessage(
+                        Alert.AlertType.INFORMATION,
+                        "Allocation Successful",
+                        "Successfully allocated " + result.getUnitsAllocated() + " unit(s) (Unit IDs: "
+                                + result.getAllocatedUnitIds() + ") to Request #" + selected.getRequestId() + ".\n"
+                                + "Total fulfilled: " + result.getTotalAllocatedForRequest() + " of " + result.getUnitsRequested() + " units.\n"
+                                + "New Request Status: " + result.getNewStatus()
+                );
+            } else {
+                showMessage(
+                        Alert.AlertType.WARNING,
+                        "No Units Allocated",
+                        "No compatible, non-expired units of " + selected.getRequiredComponent()
+                                + " are currently available for group " + selected.getRequiredBloodType() + ".\n"
+                                + "Request remains in status: " + result.getNewStatus()
+                );
+            }
+
+            loadRequests();
+
+        } catch (IllegalStateException | IllegalArgumentException e) {
+            showMessage(Alert.AlertType.WARNING, "Allocation Cannot Proceed", e.getMessage());
+        } catch (SQLException e) {
+            showMessage(Alert.AlertType.ERROR, "Allocation Failed", "Database error during allocation:\n" + e.getMessage());
+        }
+    }
+
+    @FXML
+    public void findMatches() {
+        BloodRequest selected = requestTable.getSelectionModel().getSelectedItem();
+        if (selected == null) {
+            showMessage(Alert.AlertType.WARNING, "No Selection", "Please select a request to find compatible matches.");
+            return;
+        }
+
+        try {
+            List<bloodbank.service.MatchingService.Match> matches =
+                    matchingService.findMatches(selected.getRequestId());
+
+            if (matches.isEmpty()) {
+                showMessage(
+                        Alert.AlertType.INFORMATION,
+                        "No Matches Found",
+                        "No currently available, non-expired units match Request #" + selected.getRequestId()
+                                + " (" + selected.getRequiredBloodType() + ", " + selected.getRequiredComponent() + ")."
+                );
+            } else {
+                StringBuilder sb = new StringBuilder("Found " + matches.size() + " compatible unit(s):\n\n");
+                for (bloodbank.service.MatchingService.Match m : matches) {
+                    sb.append("• Unit #").append(m.getUnitId())
+                            .append(" - Group: ").append(m.getBloodType())
+                            .append(", Component: ").append(m.getComponent())
+                            .append(", Vol: ").append(m.getVolumeMl()).append("mL")
+                            .append(", Expiry: ").append(m.getExpiryDate()).append("\n");
+                }
+                showMessage(Alert.AlertType.INFORMATION, "Matching Units", sb.toString());
+            }
+
+        } catch (SQLException e) {
+            showMessage(Alert.AlertType.ERROR, "Search Error", "Could not query matching units:\n" + e.getMessage());
         }
     }
 

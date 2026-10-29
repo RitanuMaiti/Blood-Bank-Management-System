@@ -42,6 +42,21 @@ public class DonorDAO {
         return list;
     }
 
+    public java.util.Optional<Donor> getDonorById(int id) throws SQLException {
+        String sql = "SELECT * FROM DONOR WHERE DONOR_ID = ?";
+        try (Connection c = DBConnection.getConnection();
+             PreparedStatement p = c.prepareStatement(sql)) {
+            p.setInt(1, id);
+            try (ResultSet r = p.executeQuery()) {
+                if (r.next()) {
+                    return java.util.Optional.of(map(r));
+                }
+            }
+        }
+        return java.util.Optional.empty();
+    }
+
+
     public void addDonor(Donor d) throws SQLException {
         String sql = """
             INSERT INTO DONOR

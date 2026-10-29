@@ -19,6 +19,12 @@ public class HospitalService {
         return hospitalDAO.getAllHospitals();
     }
 
+    public java.util.Optional<Hospital> getHospitalById(int id) throws SQLException {
+        if (id <= 0) return java.util.Optional.empty();
+        return hospitalDAO.getHospitalById(id);
+    }
+
+
     public void addHospital(Hospital hospital)
             throws SQLException {
         hospitalDAO.addHospital(hospital);
